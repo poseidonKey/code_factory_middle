@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkToken() async {
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
-    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+    // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
     final dio = Dio();
     try {
       final resp = await dio.post(

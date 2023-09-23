@@ -33,6 +33,7 @@ class RestaurantCard extends StatelessWidget {
 
   // 상세 내용
   final String? detail;
+
   const RestaurantCard({
     required this.image,
     required this.name,
@@ -46,7 +47,8 @@ class RestaurantCard extends StatelessWidget {
     this.heroKey,
     Key? key,
   }) : super(key: key);
-  factory RestaurantCard.fromModel({required RestaurantModel model}) {
+  factory RestaurantCard.fromModel(
+      {required RestaurantModel model, bool isDetail = false}) {
     return RestaurantCard(
       image: Image.network(
         'http://$ip${model.thumbUrl}',
@@ -58,22 +60,25 @@ class RestaurantCard extends StatelessWidget {
       deliveryTime: model.deliveryTime,
       deliveryFee: model.deliveryFee,
       ratings: model.ratings,
+      isDetail: isDetail,
     );
   }
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
+    return Column(
+      children: [
+        if (isDetail) image,
+        if (!isDetail)
           ClipRRect(
             borderRadius: BorderRadius.circular(isDetail ? 0 : 12.0),
             child: image,
           ),
-          const SizedBox(
-            height: 16,
-          ),
-          Column(
+        const SizedBox(
+          height: 16,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: isDetail ? 16 : 0),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
@@ -119,10 +124,15 @@ class RestaurantCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (isDetail && detail != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Text(detail!),
+                )
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

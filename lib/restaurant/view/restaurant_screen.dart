@@ -20,7 +20,9 @@ class RestaurantScreen extends StatelessWidget {
                 // print(snapshot.error);
                 print(snapshot.data);
                 if (!snapshot.hasData) {
-                  return Container();
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
                 return ListView.separated(
                     itemBuilder: (_, index) {
@@ -30,7 +32,9 @@ class RestaurantScreen extends StatelessWidget {
                       return GestureDetector(
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => const RestaurantDetailScreen(),
+                            builder: (_) => RestaurantDetailScreen(
+                              id: pItem.id,
+                            ),
                           ),
                         ),
                         child: RestaurantCard.fromModel(

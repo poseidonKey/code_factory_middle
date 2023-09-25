@@ -45,7 +45,7 @@ class RestaurantDetailScreen extends StatelessWidget {
     final dio = Dio();
 
     final repository =
-        RestaurantRepository(dio, baseUrl: 'http://$ip/restaurnt');
+        RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
 
     return repository.getRestaurantDetail(id: id);
 

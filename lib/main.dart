@@ -10,7 +10,7 @@ class _App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'NotoSans'),
+      theme: ThemeData(fontFamily: 'NotoSans '),
       home: const SplashScreen(),
     );
   }

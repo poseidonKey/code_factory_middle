@@ -1,10 +1,8 @@
 import 'package:code_factory_middle/common/const/data.dart';
 import 'package:code_factory_middle/common/dio/dio.dart';
-import 'package:code_factory_middle/common/model/cursor_pagination_model.dart';
 import 'package:code_factory_middle/common/secure_storage/secure_storage.dart';
 import 'package:code_factory_middle/restaurant/component/restaurant_card.dart';
-import 'package:code_factory_middle/restaurant/model/restaurant_model.dart';
-import 'package:code_factory_middle/restaurant/repository/restaurant_repository.dart';
+import 'package:code_factory_middle/restaurant/provider/restaurant_provider.dart';
 import 'package:code_factory_middle/restaurant/view/restaurant_detail_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -15,51 +13,36 @@ class RestaurantScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Center(
-          child: FutureBuilder<CursorPagination<RestaurantModel>>(
-              future: ref.watch(restaurantRepositoryProvider).paginate(),
-              builder: (context,
-                  AsyncSnapshot<CursorPagination<RestaurantModel>> snapshot) {
-                // print(snapshot.error);
-                // print(snapshot.data);
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return ListView.separated(
-                    itemBuilder: (_, index) {
-                      final pItem = snapshot.data!.data[index];
-                      return GestureDetector(
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => RestaurantDetailScreen(
-                              id: pItem.id,
-                            ),
-                          ),
-                        ),
-                        child: RestaurantCard.fromModel(
-                          model: pItem,
-                        ),
-                      );
-                    },
-                    separatorBuilder: (_, __) => const SizedBox(
-                          height: 16,
-                        ),
-                    itemCount: snapshot.data!.data.length);
-                // return RestaurantCard(
-                //     image: Image.asset('asset/img/food/ddeok_bok_gi.jpg'),
-                //     name: '불타는 떡볶이',
-                //     tags: const ['떡볶이', '치즈', '매운맛'],
-                //     ratingsCount: 100,
-                //     deliveryTime: 15,
-                //     deliveryFee: 2000,
-                //     ratings: 4.52);
-              }),
-        ),
+    //dataprovider의 사용으로 futureBuilder 필요 없음.
+    final data = ref.watch(restaurantProvider);
+    if (data.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Center(
+        child: ListView.separated(
+            itemBuilder: (_, index) {
+              final pItem = data[index];
+              return GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => RestaurantDetailScreen(
+                      id: pItem.id,
+                    ),
+                  ),
+                ),
+                child: RestaurantCard.fromModel(
+                  model: pItem,
+                ),
+              );
+            },
+            separatorBuilder: (_, __) => const SizedBox(
+                  height: 16,
+                ),
+            itemCount: data.length),
       ),
     );
   }

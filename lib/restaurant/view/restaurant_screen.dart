@@ -1,8 +1,10 @@
 import 'package:code_factory_middle/common/const/data.dart';
 import 'package:code_factory_middle/common/dio/dio.dart';
+import 'package:code_factory_middle/common/model/cursor_pagination_model.dart';
 import 'package:code_factory_middle/common/secure_storage/secure_storage.dart';
 import 'package:code_factory_middle/restaurant/component/restaurant_card.dart';
 import 'package:code_factory_middle/restaurant/model/restaurant_model.dart';
+import 'package:code_factory_middle/restaurant/repository/restaurant_repository.dart';
 import 'package:code_factory_middle/restaurant/view/restaurant_detail_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +19,10 @@ class RestaurantScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Center(
-          child: FutureBuilder<List>(
-              future: paginateRestaurant(ref),
-              builder: (context, snapshot) {
+          child: FutureBuilder<CursorPagination<RestaurantModel>>(
+              future: ref.watch(restaurantRepositoryProvider).paginate(),
+              builder: (context,
+                  AsyncSnapshot<CursorPagination<RestaurantModel>> snapshot) {
                 // print(snapshot.error);
                 // print(snapshot.data);
                 if (!snapshot.hasData) {
@@ -29,9 +32,7 @@ class RestaurantScreen extends ConsumerWidget {
                 }
                 return ListView.separated(
                     itemBuilder: (_, index) {
-                      final item = snapshot.data![index];
-                      final RestaurantModel pItem =
-                          RestaurantModel.fromJson(item);
+                      final pItem = snapshot.data!.data[index];
                       return GestureDetector(
                         onTap: () => Navigator.of(context).push(
                           MaterialPageRoute(
@@ -48,7 +49,7 @@ class RestaurantScreen extends ConsumerWidget {
                     separatorBuilder: (_, __) => const SizedBox(
                           height: 16,
                         ),
-                    itemCount: snapshot.data!.length);
+                    itemCount: snapshot.data!.data.length);
                 // return RestaurantCard(
                 //     image: Image.asset('asset/img/food/ddeok_bok_gi.jpg'),
                 //     name: '불타는 떡볶이',
@@ -63,6 +64,7 @@ class RestaurantScreen extends ConsumerWidget {
     );
   }
 
+//아래 함수도 필요 없어진다.
   Future<List> paginateRestaurant(WidgetRef ref) async {
     final dio = ref.watch(dioProvider);
     final storage = ref.watch(secureStorageProvider);

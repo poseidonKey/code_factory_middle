@@ -17,7 +17,9 @@ class RestaurantDetailScreen extends ConsumerWidget {
     return DefaultLayout(
       title: 'detail',
       child: FutureBuilder<RestaurantDetailModel>(
-          future: getRestaurantDetail(ref),
+          future: ref.watch(restaurantRepositoryProvider).getRestaurantDetail(
+                id: id,
+              ),
           builder: (context, AsyncSnapshot<RestaurantDetailModel> snapshot) {
             if (snapshot.hasError) {
               return Center(
@@ -42,14 +44,17 @@ class RestaurantDetailScreen extends ConsumerWidget {
     );
   }
 
+// futurebuilder에서 사용했었던 아래 함수도 필요 없게 된다.
   Future<RestaurantDetailModel> getRestaurantDetail(WidgetRef ref) async {
-    final dio = ref.watch(dioProvider);
+    // final dio = ref.watch(dioProvider);
 
-    final repository =
-        RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
+    // final repository =
+    //     RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
 
-    return repository.getRestaurantDetail(id: id);
-
+    // return repository.getRestaurantDetail(id: id);
+    return ref.watch(restaurantRepositoryProvider).getRestaurantDetail(
+          id: id,
+        );
     // final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
     // final resp = await dio.get(
     //   'http://$ip/restaurant/$id',

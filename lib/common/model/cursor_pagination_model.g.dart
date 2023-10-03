@@ -6,18 +6,22 @@ part of 'cursor_pagination_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CursorPagination _$CursorPaginationFromJson(Map<String, dynamic> json) =>
-    CursorPagination(
+CursorPagination<T> _$CursorPaginationFromJson<T>(
+  Map<String, dynamic> json,
+  T Function(Object? json) fromJsonT,
+) =>
+    CursorPagination<T>(
       meta: CursorPaginationMeta.fromJson(json['meta'] as Map<String, dynamic>),
-      data: (json['data'] as List<dynamic>)
-          .map((e) => RestaurantModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      data: (json['data'] as List<dynamic>).map(fromJsonT).toList(),
     );
 
-Map<String, dynamic> _$CursorPaginationToJson(CursorPagination instance) =>
+Map<String, dynamic> _$CursorPaginationToJson<T>(
+  CursorPagination<T> instance,
+  Object? Function(T value) toJsonT,
+) =>
     <String, dynamic>{
       'meta': instance.meta,
-      'data': instance.data,
+      'data': instance.data.map(toJsonT).toList(),
     };
 
 CursorPaginationMeta _$CursorPaginationMetaFromJson(

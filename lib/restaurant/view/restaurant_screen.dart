@@ -66,6 +66,9 @@ class RestaurantScreen extends ConsumerWidget {
   Future<List> paginateRestaurant(WidgetRef ref) async {
     final dio = ref.watch(dioProvider);
     final storage = ref.watch(secureStorageProvider);
+    dio.interceptors.add(
+      CustomInterceptor(storage: storage),
+    );
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
     final resp = await dio.get(

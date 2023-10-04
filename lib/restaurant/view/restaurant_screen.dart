@@ -1,5 +1,6 @@
 import 'package:code_factory_middle/common/const/data.dart';
 import 'package:code_factory_middle/common/dio/dio.dart';
+import 'package:code_factory_middle/common/model/cursor_pagination_model.dart';
 import 'package:code_factory_middle/common/secure_storage/secure_storage.dart';
 import 'package:code_factory_middle/restaurant/component/restaurant_card.dart';
 import 'package:code_factory_middle/restaurant/provider/restaurant_provider.dart';
@@ -15,17 +16,18 @@ class RestaurantScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     //dataprovider의 사용으로 futureBuilder 필요 없음.
     final data = ref.watch(restaurantProvider);
-    if (data.isEmpty) {
+    if (data is CursorPaginationLoading) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
+    final cp = data as CursorPagination;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Center(
         child: ListView.separated(
             itemBuilder: (_, index) {
-              final pItem = data[index];
+              final pItem = cp.data[index];
               return GestureDetector(
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -42,7 +44,7 @@ class RestaurantScreen extends ConsumerWidget {
             separatorBuilder: (_, __) => const SizedBox(
                   height: 16,
                 ),
-            itemCount: data.length),
+            itemCount: cp.data.length),
       ),
     );
   }

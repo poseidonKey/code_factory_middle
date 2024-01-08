@@ -101,15 +101,18 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
       if (state is CursorPaginationFetchingMore) {
         final pState = state as CursorPaginationFetchingMore;
         // 이전 데이터가 있는 상태에서 갯수만큼 추가 ..계속 누적시킴.
-        state = resp.copyWith(data: [
-          ...pState.data,
-          ...resp.data,
-        ]);
+        state = resp.copyWith(
+          data: [
+            ...pState.data,
+            ...resp.data,
+          ],
+        );
       } else {
         //처음 데이터 부르는 상황.
         state = resp;
       }
     } catch (e) {
+      print(e.toString());
       state = CursorPaginationError(
         message: '데이터를 가져오지 못했습니다.',
       );

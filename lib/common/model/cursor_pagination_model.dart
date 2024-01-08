@@ -60,10 +60,16 @@ class CursorPaginationMeta {
 
 // 새로 고칠 할 때 사용
 class CursorPaginationRefetching<T> extends CursorPagination<T> {
-  CursorPaginationRefetching({required super.meta, required super.data});
+  CursorPaginationRefetching({
+    required super.meta,
+    required super.data,
+  });
 }
 
 // 리스트의 맨 아래로 내려서 추가 데이터를 요청하는 중
 class CursorPaginationFetchingMore<T> extends CursorPagination<T> {
-  CursorPaginationFetchingMore({required super.meta, required super.data});
+  CursorPaginationFetchingMore({
+    required super.meta,
+    required super.data,
+  });
 }

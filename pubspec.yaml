@@ -40,7 +40,7 @@ dependencies:
     # retrofit_generator: ^7.0.8
     dio: ^4.0.6
     flutter_secure_storage: ^5.0.2
-    json_annotation: ^4.4.0
+    json_annotation: ^4.8.1
     retrofit: ">=3.0.0 <4.0.0"
     logger: any #for logging purpose
     # flutter_riverpod: ^1.0.4

@@ -9,16 +9,47 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RestaurantScreen extends ConsumerWidget {
+class RestaurantScreen extends ConsumerStatefulWidget {
   const RestaurantScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RestaurantScreen> createState() => _RestaurantScreenState();
+}
+
+class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
+  final ScrollController controller = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(scrollListener);
+  }
+
+  void scrollListener() {
+    print('run');
+    // 현재 위치가 최대 길이보다 조금 덜 되는 위치까지 왔다면
+    // 새로운 데이터를 추가 요청.
+    // 즉 데이터 20개 스크롤 중 18~20개 정도의 위치에 왔을 때 다음 추가 데이터를 요청
+    if (controller.offset > controller.position.maxScrollExtent - 300) {
+      ref.read(restaurantProvider.notifier).paginate(
+            fetchMore: true,
+          );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     //dataprovider의 사용으로 futureBuilder 필요 없음.
     final data = ref.watch(restaurantProvider);
+    // 처음 로딩
     if (data is CursorPaginationLoading) {
       return const Center(
         child: CircularProgressIndicator(),
+      );
+    }
+    // 에러 발생
+    if (data is CursorPaginationError) {
+      return Center(
+        child: Text(data.message),
       );
     }
     final cp = data as CursorPagination;
@@ -26,25 +57,42 @@ class RestaurantScreen extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Center(
         child: ListView.separated(
-            itemBuilder: (_, index) {
-              final pItem = cp.data[index];
-              return GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => RestaurantDetailScreen(
-                      id: pItem.id,
-                    ),
-                  ),
+          controller: controller,
+          itemCount: cp.data.length + 1,
+          itemBuilder: (_, index) {
+            // 더 이상 데이터가 없을 때 처리.
+            if (index == cp.data.length) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 16,
                 ),
-                child: RestaurantCard.fromModel(
-                  model: pItem,
+                child: Center(
+                  // 스크롤 마지막 부분에서 로딩바 약간 보여줌.
+                  child: data is CursorPaginationFetchingMore
+                      ? const CircularProgressIndicator()
+                      : const Text('마지막 데이터입니다.'),
                 ),
               );
-            },
-            separatorBuilder: (_, __) => const SizedBox(
-                  height: 16,
+            }
+            final pItem = cp.data[index];
+            return GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => RestaurantDetailScreen(
+                    id: pItem.id,
+                  ),
                 ),
-            itemCount: cp.data.length),
+              ),
+              child: RestaurantCard.fromModel(
+                model: pItem,
+              ),
+            );
+          },
+          separatorBuilder: (_, __) => const SizedBox(
+            height: 16,
+          ),
+        ),
       ),
     );
   }

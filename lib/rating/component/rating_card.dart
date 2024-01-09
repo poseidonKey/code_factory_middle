@@ -37,7 +37,12 @@ class RatingCard extends StatelessWidget {
           rating: rating,
           email: email,
         ),
-        const _Body(),
+        const SizedBox(
+          height: 8,
+        ),
+        _Body(
+          content: content,
+        ),
         const _Images(),
       ],
     );
@@ -102,10 +107,27 @@ class _Images extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body();
+  final String content;
+  const _Body({
+    required this.content,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Row(
+      children: [
+        Flexible(
+          // flexible 안에 넣은 글자는 줄을 넘어가면 자연스럽게 다음 줄로 간다.
+          // 사용하지 않으면 꽉 차면 오류 발생.
+          child: Text(
+            content,
+            style: const TextStyle(
+              color: BODY_TEXT_COLOR,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

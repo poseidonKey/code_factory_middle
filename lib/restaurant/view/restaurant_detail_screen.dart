@@ -1,5 +1,6 @@
 import 'package:code_factory_middle/common/layout/default_layout.dart';
 import 'package:code_factory_middle/product/component/product_card.dart';
+import 'package:code_factory_middle/rating/component/rating_card.dart';
 import 'package:code_factory_middle/restaurant/component/restaurant_card.dart';
 import 'package:code_factory_middle/restaurant/model/restaurant_detail_model.dart';
 import 'package:code_factory_middle/restaurant/model/restaurant_model.dart';
@@ -50,6 +51,21 @@ class _RestaurantDetailScreenState
               renderProducts(
                 products: state.products,
               ),
+            const SliverPadding(
+              sliver: SliverToBoxAdapter(
+                child: RatingCard(
+                  avatarImage:
+                      AssetImage('asset/img/logo/codefactory_logo.png'),
+                  images: [],
+                  rating: 4,
+                  email: 'jc@codefactory.ai',
+                  content: 'Good!!',
+                ),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: 16,
+              ),
+            )
           ],
         ));
   }

@@ -82,9 +82,9 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
       else {
         //만약 데이터가 있는 상황이라면
         // 기존 테이터를 보존한 채로 fetch(API 요청)를 진행
-        final pState = state as CursorPagination;
         // 새로 고침을 하고 있다.
         if (state is CursorPagination && !forceRefetch) {
+          final pState = state as CursorPagination;
           state = CursorPaginationRefetching(
             meta: pState.meta,
             data: pState.data,

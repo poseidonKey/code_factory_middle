@@ -7,6 +7,7 @@ import 'package:code_factory_middle/restaurant/provider/restaurant_provider.dart
 import 'package:code_factory_middle/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:skeletons/skeletons.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
@@ -42,6 +43,8 @@ class _RestaurantDetailScreenState
         child: CustomScrollView(
           slivers: [
             renderTop(model: state),
+            // detail 데이터 볼 때 반짝이 효과 뒤에 나타나게 한다.
+            if (state is! RestaurantDetailModel) renderLoading(),
             if (state is RestaurantDetailModel) renderLabel(),
             if (state is RestaurantDetailModel)
               renderProducts(
@@ -78,6 +81,29 @@ class _RestaurantDetailScreenState
           '메뉴',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
+      ),
+    );
+  }
+
+  SliverPadding renderLoading() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 16,
+      ),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate(List.generate(
+          3,
+          (index) => Padding(
+            padding: const EdgeInsets.only(
+              bottom: 32,
+            ),
+            child: SkeletonParagraph(
+              style: const SkeletonParagraphStyle(
+                  lines: 5, padding: EdgeInsets.zero),
+            ),
+          ),
+        )),
       ),
     );
   }

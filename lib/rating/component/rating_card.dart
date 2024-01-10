@@ -1,5 +1,6 @@
 import 'package:code_factory_middle/common/const/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class RatingCard extends StatelessWidget {
   // NetworkImage
@@ -43,7 +44,14 @@ class RatingCard extends StatelessWidget {
         _Body(
           content: content,
         ),
-        const _Images(),
+        // image가 있으면 아래와 같이 차지
+        if (images.isNotEmpty)
+          SizedBox(
+            height: 100,
+            child: _Images(
+              images: images,
+            ),
+          ),
       ],
     );
   }
@@ -98,11 +106,28 @@ class _Header extends StatelessWidget {
 }
 
 class _Images extends StatelessWidget {
-  const _Images();
+  final List<Image> images;
+  const _Images({required this.images});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      children: images
+          // 마지막 데이터에는 패딩을 넣고 싶지 않다는 이유 등으로 사용
+          .mapIndexed(
+            (index, e) => Padding(
+              padding: EdgeInsets.only(
+                right: index == images.length - 1 ? 0 : 16,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: e,
+              ),
+            ),
+          )
+          .toList(),
+    );
   }
 }
 

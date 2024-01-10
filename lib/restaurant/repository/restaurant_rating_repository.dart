@@ -13,7 +13,7 @@ final restaurantRatingProvider =
 // http://restaurant/ip/:rid/rating
   final dio = ref.watch(dioProvider);
   return RestaurantRatingRepository(dio,
-      baseUrl: 'http://restaurant/$ip/$id/rating');
+      baseUrl: 'http://restaurant/$ip/restaurant/$id/rating');
 });
 
 @RestApi()

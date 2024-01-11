@@ -14,7 +14,9 @@ class PaginationProvider<T extends IModelWithId,
     required this.repository,
   }) : super(
           CursorPaginationLoading(),
-        );
+        ) {
+    paginate();
+  }
 
   Future<void> paginate({
     int fetchCount = 20,
@@ -106,8 +108,9 @@ class PaginationProvider<T extends IModelWithId,
         //처음 데이터 부르는 상황.
         state = resp;
       }
-    } catch (e) {
+    } catch (e, stack) {
       print(e.toString());
+      print(stack);
       state = CursorPaginationError(
         message: '데이터를 가져오지 못했습니다.',
       );

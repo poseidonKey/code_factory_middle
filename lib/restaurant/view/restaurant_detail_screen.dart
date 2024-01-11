@@ -5,6 +5,7 @@ import 'package:code_factory_middle/restaurant/component/restaurant_card.dart';
 import 'package:code_factory_middle/restaurant/model/restaurant_detail_model.dart';
 import 'package:code_factory_middle/restaurant/model/restaurant_model.dart';
 import 'package:code_factory_middle/restaurant/provider/restaurant_provider.dart';
+import 'package:code_factory_middle/restaurant/provider/restaurant_rating_provider.dart';
 import 'package:code_factory_middle/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,8 +31,12 @@ class _RestaurantDetailScreenState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(
-      restaurantDetailPovider(widget.id),
+      restaurantDetailProvider(widget.id),
     );
+    final ratingsState = ref.watch(
+      restaurantRatingProvider(widget.id),
+    );
+    print(ratingsState);
     if (state == null) {
       return const DefaultLayout(
         child: Center(
@@ -40,34 +45,34 @@ class _RestaurantDetailScreenState
       );
     }
     return DefaultLayout(
-        title: 'detail',
-        child: CustomScrollView(
-          slivers: [
-            renderTop(model: state),
-            // detail 데이터 볼 때 반짝이 효과 뒤에 나타나게 한다.
-            if (state is! RestaurantDetailModel) renderLoading(),
-            if (state is RestaurantDetailModel) renderLabel(),
-            if (state is RestaurantDetailModel)
-              renderProducts(
-                products: state.products,
+      title: 'detail',
+      child: CustomScrollView(
+        slivers: [
+          renderTop(model: state),
+          // detail 데이터 볼 때 반짝이 효과 뒤에 나타나게 한다.
+          if (state is! RestaurantDetailModel) renderLoading(),
+          if (state is RestaurantDetailModel) renderLabel(),
+          if (state is RestaurantDetailModel)
+            renderProducts(
+              products: state.products,
+            ),
+          const SliverPadding(
+            sliver: SliverToBoxAdapter(
+              child: RatingCard(
+                avatarImage: AssetImage('asset/img/logo/codefactory_logo.png'),
+                images: [],
+                rating: 4,
+                email: 'jc@codefactory.ai',
+                content: 'Good!!',
               ),
-            const SliverPadding(
-              sliver: SliverToBoxAdapter(
-                child: RatingCard(
-                  avatarImage:
-                      AssetImage('asset/img/logo/codefactory_logo.png'),
-                  images: [],
-                  rating: 4,
-                  email: 'jc@codefactory.ai',
-                  content: 'Good!!',
-                ),
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-            )
-          ],
-        ));
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+            ),
+          )
+        ],
+      ),
+    );
   }
 
 // futurebuilder에서 사용했었던 아래 함수도 필요 없게 된다.

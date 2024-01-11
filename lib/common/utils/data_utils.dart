@@ -5,7 +5,8 @@ class DataUtils {
     return 'http://$ip$value';
   }
 
-  static List<String> listPathsToUrls(List<String> paths) {
+// server에서 dynamic으로 보내주기 때문에 String 타입 제거
+  static List<String> listPathsToUrls(List paths) {
     return paths
         .map(
           (e) => pathToURL(e),

@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/retrofit.dart';
 part 'restaurant_rating_repository.g.dart';
 
-final restaurantRatingProvider =
+final restaurantRatingRepositoryProvider =
     Provider.family<RestaurantRatingRepository, String>((ref, id) {
 // http://restaurant/ip/:rid/rating
   final dio = ref.watch(dioProvider);

@@ -57,10 +57,13 @@ class RatingCard extends StatelessWidget {
         ),
         // image가 있으면 아래와 같이 차지
         if (images.isNotEmpty)
-          SizedBox(
-            height: 100,
-            child: _Images(
-              images: images,
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: SizedBox(
+              height: 100,
+              child: _Images(
+                images: images,
+              ),
             ),
           ),
       ],

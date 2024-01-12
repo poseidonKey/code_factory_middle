@@ -2,6 +2,7 @@ import 'package:code_factory_middle/common/const/data.dart';
 import 'package:code_factory_middle/common/dio/dio.dart';
 import 'package:code_factory_middle/common/model/cursor_pagination_model.dart';
 import 'package:code_factory_middle/common/secure_storage/secure_storage.dart';
+import 'package:code_factory_middle/common/utils/pagination_utils.dart';
 import 'package:code_factory_middle/restaurant/component/restaurant_card.dart';
 import 'package:code_factory_middle/restaurant/provider/restaurant_provider.dart';
 import 'package:code_factory_middle/restaurant/view/restaurant_detail_screen.dart';
@@ -25,15 +26,19 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
   }
 
   void scrollListener() {
-    print('run');
+    PaginationUtils.paginate(
+      controller: controller,
+      provider: ref.read(restaurantProvider.notifier),
+    );
+    // print('run');
     // 현재 위치가 최대 길이보다 조금 덜 되는 위치까지 왔다면
     // 새로운 데이터를 추가 요청.
     // 즉 데이터 20개 스크롤 중 18~20개 정도의 위치에 왔을 때 다음 추가 데이터를 요청
-    if (controller.offset > controller.position.maxScrollExtent - 300) {
-      ref.read(restaurantProvider.notifier).paginate(
-            fetchMore: true,
-          );
-    }
+    // if (controller.offset > controller.position.maxScrollExtent - 300) {
+    //   ref.read(restaurantProvider.notifier).paginate(
+    //         fetchMore: true,
+    //       );
+    // }
   }
 
   @override

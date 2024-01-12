@@ -1,5 +1,6 @@
 import 'package:code_factory_middle/common/layout/default_layout.dart';
 import 'package:code_factory_middle/common/model/cursor_pagination_model.dart';
+import 'package:code_factory_middle/common/utils/pagination_utils.dart';
 import 'package:code_factory_middle/product/component/product_card.dart';
 import 'package:code_factory_middle/rating/component/rating_card.dart';
 import 'package:code_factory_middle/rating/model/rating_model.dart';
@@ -24,10 +25,19 @@ class RestaurantDetailScreen extends ConsumerStatefulWidget {
 
 class _RestaurantDetailScreenState
     extends ConsumerState<RestaurantDetailScreen> {
+  final ScrollController controller = ScrollController();
   @override
   void initState() {
     super.initState();
     ref.read(restaurantProvider.notifier).getDetail(id: widget.id);
+    controller.addListener(listener);
+  }
+
+  void listener() {
+    PaginationUtils.paginate(
+      controller: controller,
+      provider: ref.read(restaurantRatingProvider(widget.id).notifier),
+    );
   }
 
   @override
@@ -49,6 +59,7 @@ class _RestaurantDetailScreenState
     return DefaultLayout(
       title: 'detail',
       child: CustomScrollView(
+        controller: controller,
         slivers: [
           renderTop(model: state),
           // detail 데이터 볼 때 반짝이 효과 뒤에 나타나게 한다.

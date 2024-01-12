@@ -11,10 +11,10 @@ part 'restaurant_rating_repository.g.dart';
 
 final restaurantRatingRepositoryProvider =
     Provider.family<RestaurantRatingRepository, String>((ref, id) {
-// http://restaurant/ip/:rid/rating
+// http://restaurant/:rid/rating
   final dio = ref.watch(dioProvider);
   return RestaurantRatingRepository(dio,
-      baseUrl: 'http://restaurant/$ip/restaurant/$id/rating');
+      baseUrl: 'http://$ip/restaurant/$id/rating');
 });
 
 @RestApi()

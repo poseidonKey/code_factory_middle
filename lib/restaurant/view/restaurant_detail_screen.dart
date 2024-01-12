@@ -1,6 +1,8 @@
 import 'package:code_factory_middle/common/layout/default_layout.dart';
+import 'package:code_factory_middle/common/model/cursor_pagination_model.dart';
 import 'package:code_factory_middle/product/component/product_card.dart';
 import 'package:code_factory_middle/rating/component/rating_card.dart';
+import 'package:code_factory_middle/rating/model/rating_model.dart';
 import 'package:code_factory_middle/restaurant/component/restaurant_card.dart';
 import 'package:code_factory_middle/restaurant/model/restaurant_detail_model.dart';
 import 'package:code_factory_middle/restaurant/model/restaurant_model.dart';
@@ -56,20 +58,8 @@ class _RestaurantDetailScreenState
             renderProducts(
               products: state.products,
             ),
-          const SliverPadding(
-            sliver: SliverToBoxAdapter(
-              child: RatingCard(
-                avatarImage: AssetImage('asset/img/logo/codefactory_logo.png'),
-                images: [],
-                rating: 4,
-                email: 'jc@codefactory.ai',
-                content: 'Good!!',
-              ),
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: 16,
-            ),
-          )
+          if (ratingsState is CursorPagination<RatingModel>)
+            renderRatings(models: ratingsState.data),
         ],
       ),
     );
@@ -101,6 +91,28 @@ class _RestaurantDetailScreenState
         child: Text(
           '메뉴',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+  }
+
+  SliverPadding renderRatings({
+    required List<RatingModel> models,
+  }) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 16,
+      ),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: RatingCard.fromModel(
+              model: models[index],
+            ),
+          ),
+          childCount: models.length,
         ),
       ),
     );

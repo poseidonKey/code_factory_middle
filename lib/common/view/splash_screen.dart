@@ -2,7 +2,7 @@ import 'package:code_factory_middle/common/const/colors.dart';
 import 'package:code_factory_middle/common/const/data.dart';
 import 'package:code_factory_middle/common/layout/default_layout.dart';
 import 'package:code_factory_middle/common/secure_storage/secure_storage.dart';
-import 'package:code_factory_middle/common/view/root_tab.dart';
+import 'package:code_factory_middle/common/view/root_screen.dart';
 import 'package:code_factory_middle/user/view/login_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +49,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           key: ACCESS_TOKEN_KEY, value: resp.data['accessToken']);
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (_) => const RootTab(),
+            builder: (_) => const RootScreen(),
           ),
           (route) => false);
     } catch (e) {

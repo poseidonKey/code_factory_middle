@@ -4,14 +4,15 @@ import 'package:code_factory_middle/product/view/product_screen.dart';
 import 'package:code_factory_middle/restaurant/view/restaurant_screen.dart';
 import 'package:flutter/material.dart';
 
-class RootTab extends StatefulWidget {
-  const RootTab({super.key});
+class RootScreen extends StatefulWidget {
+  const RootScreen({super.key});
 
   @override
-  State<RootTab> createState() => _RootTabState();
+  State<RootScreen> createState() => _RootScreenState();
 }
 
-class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
+class _RootScreenState extends State<RootScreen>
+    with SingleTickerProviderStateMixin {
   int index = 0;
   late TabController
       controller; // 또는 ?로 할 수 있지만 뒤에 귀찮은 작업이 될 수 있으므로 late로 하는 것이 좋다.

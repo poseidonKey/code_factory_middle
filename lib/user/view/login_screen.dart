@@ -4,7 +4,7 @@ import 'package:code_factory_middle/common/const/colors.dart';
 import 'package:code_factory_middle/common/const/data.dart';
 import 'package:code_factory_middle/common/layout/default_layout.dart';
 import 'package:code_factory_middle/common/secure_storage/secure_storage.dart';
-import 'package:code_factory_middle/common/view/root_tab.dart';
+import 'package:code_factory_middle/common/view/root_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -92,7 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const RootTab(),
+                      builder: (context) => const RootScreen(),
                     ),
                   );
                 },

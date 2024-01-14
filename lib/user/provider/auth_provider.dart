@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:code_factory_middle/common/view/root_screen.dart';
 import 'package:code_factory_middle/common/view/splash_screen.dart';
 import 'package:code_factory_middle/restaurant/view/restaurant_detail_screen.dart';
@@ -32,7 +34,7 @@ class AuthProvider extends ChangeNotifier {
             GoRoute(
               path: 'restaurant/:rid',
               builder: (_, state) =>
-                  RestaurantDetailScreen(id: state.params['id']!),
+                  RestaurantDetailScreen(id: state.pathParameters['id']!),
             ),
           ],
         ),
@@ -49,7 +51,7 @@ class AuthProvider extends ChangeNotifier {
       ];
   // splashScreen을 둔 이유는 앱을 처음 시작했을 때 토큰이 존재하는지 확인하고
   // 이에 따라 로그인 스크린으로 보낼지, 홈스크린으로 보내줄지 확인하는 과정이 필요
-  String? redirectLogic(GoRouterState state) {
+  FutureOr<String?> redirectLogic(BuildContext context, GoRouterState state) {
     final UserModelBase? user = ref.read(userMeProvider);
     final logginIn = state.location == '/login';
 

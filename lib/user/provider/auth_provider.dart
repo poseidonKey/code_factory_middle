@@ -1,8 +1,16 @@
+import 'package:code_factory_middle/common/view/root_screen.dart';
+import 'package:code_factory_middle/common/view/splash_screen.dart';
+import 'package:code_factory_middle/restaurant/view/restaurant_detail_screen.dart';
 import 'package:code_factory_middle/user/model/user_model.dart';
 import 'package:code_factory_middle/user/provider/user_me_provider.dart';
+import 'package:code_factory_middle/user/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
+  return AuthProvider(ref: ref);
+});
 
 class AuthProvider extends ChangeNotifier {
   final Ref ref;
@@ -15,6 +23,30 @@ class AuthProvider extends ChangeNotifier {
       }
     });
   }
+  List<GoRoute> get routes => [
+        GoRoute(
+          path: '/',
+          name: RootScreen.routeName,
+          builder: (context, state) => const RootScreen(),
+          routes: [
+            GoRoute(
+              path: 'restaurant/:rid',
+              builder: (_, state) =>
+                  RestaurantDetailScreen(id: state.params['id']!),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: '/splash',
+          name: SplashScreen.routeName,
+          builder: (context, state) => const SplashScreen(),
+        ),
+        GoRoute(
+          path: '/login',
+          name: LoginScreen.routeName,
+          builder: (context, state) => const LoginScreen(),
+        ),
+      ];
   // splashScreen을 둔 이유는 앱을 처음 시작했을 때 토큰이 존재하는지 확인하고
   // 이에 따라 로그인 스크린으로 보낼지, 홈스크린으로 보내줄지 확인하는 과정이 필요
   String? redirectLogic(GoRouterState state) {

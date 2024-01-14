@@ -2,6 +2,7 @@ import 'package:code_factory_middle/common/const/colors.dart';
 import 'package:code_factory_middle/common/layout/default_layout.dart';
 import 'package:code_factory_middle/product/view/product_screen.dart';
 import 'package:code_factory_middle/restaurant/view/restaurant_screen.dart';
+import 'package:code_factory_middle/user/view/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class RootScreen extends StatefulWidget {
@@ -83,10 +84,7 @@ class _RootScreenState extends State<RootScreen>
                 child: Container(
               child: const Text("주문"),
             )),
-            Center(
-                child: Container(
-              child: const Text("프로필"),
-            )),
+            const ProfileScreen(),
           ]),
     );
   }

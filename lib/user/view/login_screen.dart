@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:code_factory_middle/common/component/custom_text_form_field.dart';
 import 'package:code_factory_middle/common/const/colors.dart';
-import 'package:code_factory_middle/common/const/data.dart';
 import 'package:code_factory_middle/common/layout/default_layout.dart';
-import 'package:code_factory_middle/common/secure_storage/secure_storage.dart';
-import 'package:code_factory_middle/common/view/root_screen.dart';
-import 'package:dio/dio.dart';
+import 'package:code_factory_middle/user/model/user_model.dart';
+import 'package:code_factory_middle/user/provider/user_me_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,11 +19,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String password = '';
   @override
   Widget build(BuildContext context) {
-    final dio = Dio();
-    //localhost
-    // const emulatorIp = '10.0.2.2:3000';
-    // const simulatorIp = '127.0.0.1:3000';
-    // final ip = Platform.isIOS ? simulatorIp : emulatorIp;
+    final state = ref.watch(userMeProvider);
     return DefaultLayout(
         child: SingleChildScrollView(
       // drag 했을 때 자판 없애기
@@ -68,35 +61,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 height: 16,
               ),
               ElevatedButton(
-                onPressed: () async {
-                  // const rawString = 'test@codefactory.ai:testtest';
-                  final rawString = '$username:$password';
-                  Codec<String, String> stringToBase64 = utf8.fuse(base64);
-                  // final rawString = '$username:$password';
-                  String token = stringToBase64.encode(rawString);
-                  final resp = await dio.post(
-                    'http://$ip/auth/login',
-                    options: Options(
-                      headers: {
-                        'authorization': 'Basic $token',
+                onPressed: state is UserModelLoading // 로그인 중에 버튼 비활성화 시킴
+                    ? null
+                    : () async {
+                        ref.read(userMeProvider.notifier).login(
+                              username: username,
+                              password: password,
+                            );
                       },
-                    ),
-                  );
-                  // print(resp.data);
-                  final refreshToken = resp.data['refreshToken'];
-                  final accessToken = resp.data['accessToken'];
-                  final storage = ref.read(secureStorageProvider);
-                  await storage.write(
-                      key: REFRESH_TOKEN_KEY, value: refreshToken);
-                  await storage.write(
-                      key: ACCESS_TOKEN_KEY, value: accessToken);
-
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const RootScreen(),
-                    ),
-                  );
-                },
                 child: const Text('로그인'),
               ),
               ElevatedButton(

@@ -17,9 +17,6 @@ class _App extends ConsumerWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: router,
-      // routerDelegate: router.routerDelegate,
-      // routeInformationParser: router.routeInformationParser,
-      // routeInformationProvider: router.routeInformationProvider,
       theme: ThemeData(
         fontFamily: 'NotoSans ',
       ),

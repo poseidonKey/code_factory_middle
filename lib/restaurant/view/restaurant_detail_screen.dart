@@ -1,7 +1,9 @@
+import 'package:code_factory_middle/common/const/colors.dart';
 import 'package:code_factory_middle/common/layout/default_layout.dart';
 import 'package:code_factory_middle/common/model/cursor_pagination_model.dart';
 import 'package:code_factory_middle/common/utils/pagination_utils.dart';
 import 'package:code_factory_middle/product/component/product_card.dart';
+import 'package:code_factory_middle/product/model/product_model.dart';
 import 'package:code_factory_middle/rating/component/rating_card.dart';
 import 'package:code_factory_middle/rating/model/rating_model.dart';
 import 'package:code_factory_middle/restaurant/component/restaurant_card.dart';
@@ -10,6 +12,7 @@ import 'package:code_factory_middle/restaurant/model/restaurant_model.dart';
 import 'package:code_factory_middle/restaurant/provider/restaurant_provider.dart';
 import 'package:code_factory_middle/restaurant/provider/restaurant_rating_provider.dart';
 import 'package:code_factory_middle/restaurant/repository/restaurant_repository.dart';
+import 'package:code_factory_middle/user/provider/basket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletons/skeletons.dart';
@@ -49,7 +52,8 @@ class _RestaurantDetailScreenState
     final ratingsState = ref.watch(
       restaurantRatingProvider(widget.id),
     );
-    print(ratingsState);
+    final basket = ref.watch(basketProvider);
+    // print(ratingsState);
     if (state == null) {
       return const DefaultLayout(
         child: Center(
@@ -59,6 +63,26 @@ class _RestaurantDetailScreenState
     }
     return DefaultLayout(
       title: 'detail',
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: PRIMARY_COLOR,
+        child: Badge(
+          isLabelVisible: basket.isNotEmpty,
+          label: Text(
+            basket
+                .fold<int>(0, (previous, next) => previous + next.count)
+                .toString(),
+            style: const TextStyle(
+              color: PRIMARY_COLOR,
+              fontSize: 10,
+            ),
+          ),
+          backgroundColor: Colors.white,
+          child: const Icon(
+            Icons.shopping_basket_outlined,
+          ),
+        ),
+      ),
       child: CustomScrollView(
         controller: controller,
         slivers: [
@@ -69,6 +93,7 @@ class _RestaurantDetailScreenState
           if (state is RestaurantDetailModel)
             renderProducts(
               products: state.products,
+              restaurant: state,
             ),
           if (ratingsState is CursorPagination<RatingModel>)
             renderRatings(models: ratingsState.data),
@@ -153,17 +178,33 @@ class _RestaurantDetailScreenState
     );
   }
 
-  SliverPadding renderProducts(
-      {required List<RestaurantProductModel> products}) {
+  SliverPadding renderProducts({
+    required List<RestaurantProductModel> products,
+    required RestaurantModel restaurant,
+  }) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
           final model = products[index];
-          return Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: ProductCard.fromRestaurantProductModel(
-              model: model,
+          return InkWell(
+            onTap: () {
+              ref.read(basketProvider.notifier).addToBasket(
+                    product: ProductModel(
+                      id: model.id,
+                      name: model.name,
+                      detail: model.detail,
+                      imgUrl: model.imgUrl,
+                      price: model.price,
+                      restaurant: restaurant,
+                    ),
+                  );
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: ProductCard.fromRestaurantProductModel(
+                model: model,
+              ),
             ),
           );
         }, childCount: products.length),

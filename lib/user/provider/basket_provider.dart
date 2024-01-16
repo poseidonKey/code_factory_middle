@@ -1,15 +1,35 @@
 import 'package:code_factory_middle/product/model/product_model.dart';
 import 'package:code_factory_middle/user/model/basket_item_model.dart';
+import 'package:code_factory_middle/user/model/patch_basket_body.dart';
+import 'package:code_factory_middle/user/repository/user_me_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 
 final basketProvider =
     StateNotifierProvider<BasketProvider, List<BasketItemModel>>((ref) {
-  return BasketProvider();
+  final repository = ref.watch(userMeRepositoryProvider);
+  return BasketProvider(
+    repository: repository,
+  );
 });
 
 class BasketProvider extends StateNotifier<List<BasketItemModel>> {
-  BasketProvider() : super([]);
+  final UserMeRepository repository;
+  BasketProvider({
+    required this.repository,
+  }) : super([]);
+  Future<void> patchBasket() async {
+    await repository.patchBasket(
+      body: PatchBasketBody(
+          basket: state
+              .map(
+                (e) => PatchBasketBodyBasket(
+                    productId: e.product.id, count: e.count),
+              )
+              .toList()),
+    );
+  }
+
   Future<void> addToBasket({required ProductModel product}) async {
     // 1)아직 장바구니에 해당되는 상품이 없다면
     //    상품을 추가한다.
@@ -34,6 +54,12 @@ class BasketProvider extends StateNotifier<List<BasketItemModel>> {
         )
       ];
     }
+    // Optimistic Response(긍정적 응답)
+    // 즉 아래 코드를 위로 올릴 수도 있지만 앱의 동작이 늦어진다.
+    // await Future.delayed(
+    //   const Duration(milliseconds: 500),
+    // );
+    await patchBasket();
   }
 
   Future<void> removeFromBasket({
@@ -66,5 +92,6 @@ class BasketProvider extends StateNotifier<List<BasketItemModel>> {
           )
           .toList();
     }
+    await patchBasket();
   }
 }

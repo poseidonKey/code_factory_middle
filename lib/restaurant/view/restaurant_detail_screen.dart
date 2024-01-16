@@ -4,6 +4,7 @@ import 'package:code_factory_middle/common/model/cursor_pagination_model.dart';
 import 'package:code_factory_middle/common/utils/pagination_utils.dart';
 import 'package:code_factory_middle/product/component/product_card.dart';
 import 'package:code_factory_middle/product/model/product_model.dart';
+import 'package:code_factory_middle/product/view/basket_screen.dart';
 import 'package:code_factory_middle/rating/component/rating_card.dart';
 import 'package:code_factory_middle/rating/model/rating_model.dart';
 import 'package:code_factory_middle/restaurant/component/restaurant_card.dart';
@@ -15,6 +16,7 @@ import 'package:code_factory_middle/restaurant/repository/restaurant_repository.
 import 'package:code_factory_middle/user/provider/basket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletons/skeletons.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
@@ -64,7 +66,9 @@ class _RestaurantDetailScreenState
     return DefaultLayout(
       title: 'detail',
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          context.pushNamed(BasketScreen.routeName);
+        },
         backgroundColor: PRIMARY_COLOR,
         child: Badge(
           isLabelVisible: basket.isNotEmpty,
@@ -203,6 +207,7 @@ class _RestaurantDetailScreenState
             child: Padding(
               padding: const EdgeInsets.only(top: 16),
               child: ProductCard.fromRestaurantProductModel(
+                id: model.id,
                 model: model,
               ),
             ),

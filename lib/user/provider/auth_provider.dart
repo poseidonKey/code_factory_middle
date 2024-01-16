@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:code_factory_middle/common/view/root_screen.dart';
 import 'package:code_factory_middle/common/view/splash_screen.dart';
+import 'package:code_factory_middle/product/view/basket_screen.dart';
 import 'package:code_factory_middle/restaurant/view/restaurant_detail_screen.dart';
 import 'package:code_factory_middle/user/model/user_model.dart';
 import 'package:code_factory_middle/user/provider/user_me_provider.dart';
@@ -48,6 +49,11 @@ class AuthProvider extends ChangeNotifier {
           path: '/login',
           name: LoginScreen.routeName,
           builder: (context, state) => const LoginScreen(),
+        ),
+        GoRoute(
+          path: '/basket',
+          name: BasketScreen.routeName,
+          builder: (context, state) => const BasketScreen(),
         ),
       ];
   // splashScreen을 둔 이유는 앱을 처음 시작했을 때 토큰이 존재하는지 확인하고

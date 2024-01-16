@@ -25,6 +25,7 @@ class _ProductTabState extends ConsumerState<ProductScreen> {
                   pathParameters: {'rid': model.restaurant.id});
             },
             child: ProductCard.fromProductModel(
+              id: model.id,
               model: model,
             ),
           );

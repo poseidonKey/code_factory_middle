@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:code_factory_middle/common/view/root_screen.dart';
 import 'package:code_factory_middle/common/view/splash_screen.dart';
+import 'package:code_factory_middle/order/view/order_done_screen.dart';
 import 'package:code_factory_middle/product/view/basket_screen.dart';
 import 'package:code_factory_middle/restaurant/view/restaurant_detail_screen.dart';
 import 'package:code_factory_middle/user/model/user_model.dart';
@@ -44,6 +45,11 @@ class AuthProvider extends ChangeNotifier {
           path: '/splash',
           name: SplashScreen.routeName,
           builder: (context, state) => const SplashScreen(),
+        ),
+        GoRoute(
+          path: '/order_don',
+          name: OrderDoneScreen.routeName,
+          builder: (context, state) => const OrderDoneScreen(),
         ),
         GoRoute(
           path: '/login',

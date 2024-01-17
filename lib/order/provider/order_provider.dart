@@ -5,6 +5,18 @@ import 'package:code_factory_middle/user/provider/basket_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+final orderProvider =
+    StateNotifierProvider<OrderStateNotifier, List<OrderModel>>(
+  (ref) {
+    final repo = ref.watch(orderRepositoryProvider);
+
+    return OrderStateNotifier(
+      ref: ref,
+      repository: repo,
+    );
+  },
+);
+
 class OrderStateNotifier extends StateNotifier<List<OrderModel>> {
   final Ref ref;
   final OrderRepository repository;

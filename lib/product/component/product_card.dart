@@ -12,7 +12,7 @@ class ProductCard extends ConsumerWidget {
   final int price;
   final VoidCallback? onSubtract;
   final VoidCallback? onAdd;
-  final String id;
+  final String? id;
   const ProductCard(
       {super.key,
       required this.id,
@@ -27,7 +27,7 @@ class ProductCard extends ConsumerWidget {
     required ProductModel model,
     VoidCallback? onSubtract,
     VoidCallback? onAdd,
-    required String id,
+    String? id,
   }) {
     return ProductCard(
       image: Image.network(
@@ -115,18 +115,21 @@ class ProductCard extends ConsumerWidget {
           ),
         ),
         if (onSubtract != null && onAdd != null)
-          _Footer(
-            count: basket.firstWhere((e) => e.product.id == id).count,
-            total: (basket
-                        .firstWhere((element) => element.product.id == id)
-                        .count *
-                    basket
-                        .firstWhere((element) => element.product.id == id)
-                        .product
-                        .price)
-                .toString(),
-            onSubtract: onSubtract!,
-            onAdd: onAdd!,
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: _Footer(
+              count: basket.firstWhere((e) => e.product.id == id).count,
+              total: (basket
+                          .firstWhere((element) => element.product.id == id)
+                          .count *
+                      basket
+                          .firstWhere((element) => element.product.id == id)
+                          .product
+                          .price)
+                  .toString(),
+              onSubtract: onSubtract!,
+              onAdd: onAdd!,
+            ),
           ),
       ],
     );
@@ -164,12 +167,18 @@ class _Footer extends StatelessWidget {
             onTap: onSubtract,
             icon: Icons.remove,
           ),
+          const SizedBox(
+            width: 8,
+          ),
           Text(
             count.toString(),
             style: const TextStyle(
               color: PRIMARY_COLOR,
               fontWeight: FontWeight.w500,
             ),
+          ),
+          const SizedBox(
+            width: 8,
           ),
           renderButton(
             onTap: onAdd,

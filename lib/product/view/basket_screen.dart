@@ -24,7 +24,7 @@ class BasketScreen extends ConsumerWidget {
       );
     }
 
-    final int productTotal = basket.fold<int>(
+    final int productsTotal = basket.fold<int>(
       0,
       (p, n) => (p + n.product.price * n.count),
     );
@@ -72,7 +72,7 @@ class BasketScreen extends ConsumerWidget {
                         style: TextStyle(color: BODY_TEXT_COLOR),
                       ),
                       Text(
-                        '₩${productTotal.toString()}',
+                        '₩${productsTotal.toString()}',
                       ),
                     ],
                   ),
@@ -94,7 +94,7 @@ class BasketScreen extends ConsumerWidget {
                         '총액',
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      Text('₩${productTotal + deliveryFee}'),
+                      Text('₩${productsTotal + deliveryFee}'),
                     ],
                   ),
                   SizedBox(

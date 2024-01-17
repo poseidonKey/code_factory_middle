@@ -47,7 +47,7 @@ class OrderCard extends StatelessWidget {
         Text(
             // 2022.09.01
             // 2022.9.1
-            '${orderDate.year}.${orderDate.month.toString().padLeft(2, '0')}${orderDate.day.toString().padLeft(2, '0')} 주문완료'),
+            '${orderDate.year}.${orderDate.month.toString().padLeft(2, '0')}.${orderDate.day.toString().padLeft(2, '0')} 주문완료'),
         const SizedBox(height: 8.0),
         Row(
           children: [

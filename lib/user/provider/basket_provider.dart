@@ -2,12 +2,14 @@ import 'package:code_factory_middle/product/model/product_model.dart';
 import 'package:code_factory_middle/user/model/basket_item_model.dart';
 import 'package:code_factory_middle/user/model/patch_basket_body.dart';
 import 'package:code_factory_middle/user/repository/user_me_repository.dart';
+import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 
 final basketProvider =
     StateNotifierProvider<BasketProvider, List<BasketItemModel>>((ref) {
   final repository = ref.watch(userMeRepositoryProvider);
+
   return BasketProvider(
     repository: repository,
   );
@@ -15,9 +17,19 @@ final basketProvider =
 
 class BasketProvider extends StateNotifier<List<BasketItemModel>> {
   final UserMeRepository repository;
+  // 마지막 데이터만 최종적으로 반영하고자 할 때 Debouncer 사용.
+  final updateBasketDebounce = Debouncer(
+    const Duration(seconds: 1),
+    initialValue: null,
+    checkEquality: false,
+  );
   BasketProvider({
     required this.repository,
-  }) : super([]);
+  }) : super([]) {
+    updateBasketDebounce.values.listen((event) {
+      patchBasket();
+    });
+  }
   Future<void> patchBasket() async {
     await repository.patchBasket(
       body: PatchBasketBody(
@@ -59,7 +71,7 @@ class BasketProvider extends StateNotifier<List<BasketItemModel>> {
     // await Future.delayed(
     //   const Duration(milliseconds: 500),
     // );
-    await patchBasket();
+    updateBasketDebounce.setValue(null);
   }
 
   Future<void> removeFromBasket({
@@ -92,6 +104,6 @@ class BasketProvider extends StateNotifier<List<BasketItemModel>> {
           )
           .toList();
     }
-    await patchBasket();
+    updateBasketDebounce.setValue(null);
   }
 }

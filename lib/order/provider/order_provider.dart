@@ -54,7 +54,7 @@ class OrderStateNotifier
           createdAt: DateTime.now().toString(),
         ),
       );
-
+      print(resp);
       return true;
     } catch (e) {
       return false;

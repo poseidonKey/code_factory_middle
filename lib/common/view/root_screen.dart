@@ -1,5 +1,6 @@
 import 'package:code_factory_middle/common/const/colors.dart';
 import 'package:code_factory_middle/common/layout/default_layout.dart';
+import 'package:code_factory_middle/order/view/order_screen.dart';
 import 'package:code_factory_middle/product/view/product_screen.dart';
 import 'package:code_factory_middle/restaurant/view/restaurant_screen.dart';
 import 'package:code_factory_middle/user/view/profile_screen.dart';
@@ -77,14 +78,11 @@ class _RootScreenState extends State<RootScreen>
       child: TabBarView(
           physics: const NeverScrollableScrollPhysics(), //swift를 통해 이동 금지
           controller: controller,
-          children: [
-            const RestaurantScreen(),
-            const ProductScreen(),
-            Center(
-                child: Container(
-              child: const Text("주문"),
-            )),
-            const ProfileScreen(),
+          children: const [
+            RestaurantScreen(),
+            ProductScreen(),
+            OrderScreen(),
+            ProfileScreen(),
           ]),
     );
   }

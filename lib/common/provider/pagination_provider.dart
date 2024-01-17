@@ -2,7 +2,20 @@ import 'package:code_factory_middle/common/model/cursor_pagination_model.dart';
 import 'package:code_factory_middle/common/model/model_with_id.dart';
 import 'package:code_factory_middle/common/model/pagination_params.dart';
 import 'package:code_factory_middle/common/repository/base_pagination_repository.dart';
+import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class _PaginationInfo {
+  final int fetchCount;
+  final bool fetchMore;
+  final bool forceRefetch;
+
+  _PaginationInfo({
+    this.fetchCount = 20,
+    this.fetchMore = false,
+    this.forceRefetch = false,
+  });
+}
 
 // implement는 제네릭에서 사용 불가 이므로 extends로 써도 된다.
 // 여러가지를 일반화 시키기 위해 제네릭을 이용하고 interface class를 사용
@@ -10,12 +23,20 @@ class PaginationProvider<T extends IModelWithId,
         U extends IBasePaginationRepository<T>>
     extends StateNotifier<CursorPaginationBase> {
   final U repository;
+  final paginationThrottle = Throttle(
+    const Duration(seconds: 3),
+    initialValue: _PaginationInfo(),
+    checkEquality: false,
+  );
   PaginationProvider({
     required this.repository,
   }) : super(
           CursorPaginationLoading(),
         ) {
     paginate();
+    paginationThrottle.values.listen((state) {
+      _throttlePagination(state);
+    });
   }
 
   Future<void> paginate({
@@ -28,6 +49,18 @@ class PaginationProvider<T extends IModelWithId,
     // true의 경우 : CursorPageinationLoading()
     bool forceRefetch = false,
   }) async {
+    // _throttlePagination  을 throttle을 통해 실행 시킬 수 있다
+    paginationThrottle.setValue(_PaginationInfo(
+      fetchCount: fetchCount,
+      fetchMore: fetchMore,
+      forceRefetch: forceRefetch,
+    ));
+  }
+
+  _throttlePagination(_PaginationInfo info) async {
+    final fetchCount = info.fetchCount;
+    final fetchMore = info.fetchMore;
+    final forceRefetch = info.forceRefetch;
     try {
       // State의 5가지 가능성.. 즉 상태가
       // 1. CursorPagination : 정상적으로 데이터가 있는 상태

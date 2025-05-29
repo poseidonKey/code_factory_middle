@@ -27,7 +27,7 @@ Map<String, dynamic> _$CursorPaginationToJson<T>(
 CursorPaginationMeta _$CursorPaginationMetaFromJson(
         Map<String, dynamic> json) =>
     CursorPaginationMeta(
-      count: json['count'] as int,
+      count: (json['count'] as num).toInt(),
       hasMore: json['hasMore'] as bool,
     );
 

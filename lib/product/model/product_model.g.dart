@@ -11,7 +11,7 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       name: json['name'] as String,
       detail: json['detail'] as String,
       imgUrl: DataUtils.pathToURL(json['imgUrl'] as String),
-      price: json['price'] as int,
+      price: (json['price'] as num).toInt(),
       restaurant:
           RestaurantModel.fromJson(json['restaurant'] as Map<String, dynamic>),
     );

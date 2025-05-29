@@ -27,6 +27,7 @@ class AuthProvider extends ChangeNotifier {
       }
     });
   }
+
   List<GoRoute> get routes => [
         GoRoute(
           path: '/',
@@ -66,7 +67,7 @@ class AuthProvider extends ChangeNotifier {
   // 이에 따라 로그인 스크린으로 보낼지, 홈스크린으로 보내줄지 확인하는 과정이 필요
   FutureOr<String?> redirectLogic(BuildContext context, GoRouterState state) {
     final UserModelBase? user = ref.read(userMeProvider);
-    final logginIn = state.location == '/login';
+    final logginIn = state.uri.toString() == '/login';
 
     // user 정보가 없는데 로그인 중이면 그대로 로그인 페이지에 두고
     // 로그인 중이 아니라면 로그인 페이지로 이동
@@ -80,7 +81,7 @@ class AuthProvider extends ChangeNotifier {
     // 사용자 정보가 있는 상태이면
     // 로그인 중이거나 현재 위치가 SplashScreen이면 홈으로 이동
     if (user is UserModel) {
-      return logginIn || state.location == '/splash' ? '/' : null;
+      return logginIn || state.matchedLocation == '/splash' ? '/' : null;
     }
     if (user is UserModelError) {
       return !logginIn ? '/login' : null;

@@ -20,14 +20,14 @@ class _OrderRepository implements OrderRepository {
 
   @override
   Future<CursorPagination<OrderModel>> paginate(
-      {paginationParams = const PaginationParams()}) async {
+      {PaginationParams? paginationParams = const PaginationParams()}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.addAll(paginationParams?.toJson() ?? <String, dynamic>{});
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<CursorPagination<OrderModel>>(Options(
       method: 'GET',
@@ -40,7 +40,11 @@ class _OrderRepository implements OrderRepository {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = CursorPagination<OrderModel>.fromJson(
       _result.data!,
       (json) => OrderModel.fromJson(json as Map<String, dynamic>),
@@ -49,7 +53,7 @@ class _OrderRepository implements OrderRepository {
   }
 
   @override
-  Future<OrderModel> postOrder({required body}) async {
+  Future<OrderModel> postOrder({required PostOrderBody body}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
@@ -68,7 +72,11 @@ class _OrderRepository implements OrderRepository {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = OrderModel.fromJson(_result.data!);
     return value;
   }
@@ -84,5 +92,22 @@ class _OrderRepository implements OrderRepository {
       }
     }
     return requestOptions;
+  }
+
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
+    if (baseUrl == null || baseUrl.trim().isEmpty) {
+      return dioBaseUrl;
+    }
+
+    final url = Uri.parse(baseUrl);
+
+    if (url.isAbsolute) {
+      return url.toString();
+    }
+
+    return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }

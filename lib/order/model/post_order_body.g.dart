@@ -12,7 +12,7 @@ PostOrderBody _$PostOrderBodyFromJson(Map<String, dynamic> json) =>
       products: (json['products'] as List<dynamic>)
           .map((e) => PostOrderBodyProduct.fromJson(e as Map<String, dynamic>))
           .toList(),
-      totalPrice: json['totalPrice'] as int,
+      totalPrice: (json['totalPrice'] as num).toInt(),
       createdAt: json['createdAt'] as String,
     );
 
@@ -28,7 +28,7 @@ PostOrderBodyProduct _$PostOrderBodyProductFromJson(
         Map<String, dynamic> json) =>
     PostOrderBodyProduct(
       productId: json['productId'] as String,
-      count: json['count'] as int,
+      count: (json['count'] as num).toInt(),
     );
 
 Map<String, dynamic> _$PostOrderBodyProductToJson(

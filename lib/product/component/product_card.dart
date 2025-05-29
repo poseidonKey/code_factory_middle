@@ -142,7 +142,6 @@ class _Footer extends StatelessWidget {
   final VoidCallback onSubtract;
   final VoidCallback onAdd;
   const _Footer({
-    super.key,
     required this.count,
     required this.total,
     required this.onSubtract,

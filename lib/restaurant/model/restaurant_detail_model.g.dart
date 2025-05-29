@@ -16,9 +16,9 @@ RestaurantDetailModel _$RestaurantDetailModelFromJson(
       priceRange:
           $enumDecode(_$RestaurantPriceRangeEnumMap, json['priceRange']),
       ratings: (json['ratings'] as num).toDouble(),
-      ratingsCount: json['ratingsCount'] as int,
-      deliveryTime: json['deliveryTime'] as int,
-      deliveryFee: json['deliveryFee'] as int,
+      ratingsCount: (json['ratingsCount'] as num).toInt(),
+      deliveryTime: (json['deliveryTime'] as num).toInt(),
+      deliveryFee: (json['deliveryFee'] as num).toInt(),
       detail: json['detail'] as String,
       products: (json['products'] as List<dynamic>)
           .map(
@@ -55,7 +55,7 @@ RestaurantProductModel _$RestaurantProductModelFromJson(
       name: json['name'] as String,
       imgUrl: DataUtils.pathToURL(json['imgUrl'] as String),
       detail: json['detail'] as String,
-      price: json['price'] as int,
+      price: (json['price'] as num).toInt(),
     );
 
 Map<String, dynamic> _$RestaurantProductModelToJson(

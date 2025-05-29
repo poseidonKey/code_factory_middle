@@ -22,7 +22,7 @@ PatchBasketBodyBasket _$PatchBasketBodyBasketFromJson(
         Map<String, dynamic> json) =>
     PatchBasketBodyBasket(
       productId: json['productId'] as String,
-      count: json['count'] as int,
+      count: (json['count'] as num).toInt(),
     );
 
 Map<String, dynamic> _$PatchBasketBodyBasketToJson(
